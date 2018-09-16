@@ -1,6 +1,11 @@
+install.packages("ggplot2")
+library(ggplot2)
+
+
+
 #ANALYSIS!
 CEDA=read.csv("Data/CEDAclean.csv", na.strings=c("","NA"))
-str(CEDA)
+# str(CEDA)
 
 # Examining columns X & X.1
 
@@ -10,7 +15,7 @@ str(boolean_test)
 
 
 # Oops, the columns are duplicates! Remove column X.1 (Updated clean data doc version.)
-remove(CEDA$X.1)
+CEDA$X.1 <- NULL
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -159,18 +164,6 @@ Group_edu <- subset(CEDA,Boolean_occ_edu==TRUE)
 Group_fitness <- subset(CEDA,Boolean_occ_fitness==TRUE)  
 Group_other <- subset(CEDA,Boolean_occ_other==TRUE)   
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-
-#
-#Literacy_Grade <- as.character(CEDA$LitGrade) 
-#levels(Literacy_Grade)[levels(Literacy_Grade)=="0"] <- "Incorrect" 
-#levels(Literacy_Grade)[levels(Literacy_Grade)=="50"] <- "Medium"
-#levels(Literacy_Grade)[levels(Literacy_Grade)=="100"] <- "High"
-
-
-
-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -187,29 +180,30 @@ Group_other <- subset(CEDA,Boolean_occ_other==TRUE)
 # Create graph of responses on most frequent ED on literacy quiz
 # CEDA=read.csv("CEDAclean.csv", na.strings=c("","NA"))
 
-install.packages("ggplot2")
-library(ggplot2)
 
 
 CEDA$LitGrade
 
 str(CEDA$LitGrade)
 
-# This is is so we can make the graph using different subsets of the data in the future:
+# This is is so we can make the graph using different subsets of the data in the future 
+# Replace subgroup_name with the name of the subgroup to examine. Else, uncomment LitPlaceholder <- CEDA$LitGrade.
 
-LitPlaceholder <- CEDA$LitGrade
+# LitPlaceholder <- subgroup_name$LitGrade
+# LitPlaceholder <- CEDA$LitGrade
 
 
 Literacy_Grade_num <-
-  ifelse(LitPlaceholder ==100,Literacy_Grade_num[LitPlaceholder] <-"High",
-         ifelse(LitPlaceholder ==50,Literacy_Grade_num[LitPlaceholder] <-"Medium", 
-                ifelse(LitPlaceholder ==0,Literacy_Grade_num[LitPlaceholder] <-"Low",NA
+  ifelse(LitPlaceholder ==100,Literacy_Grade_num <-"High",
+         ifelse(LitPlaceholder ==50,Literacy_Grade_num <-"Medium", 
+                ifelse(LitPlaceholder ==0,Literacy_Grade_num <-"Low",NA
                 )))
 
 Literacy_Grade <- na.omit(Literacy_Grade_num)
 
 str(Literacy_Grade)
-levels(Literacy_Grade)
+table(Literacy_Grade)
+
 x<- Literacy_Grade
 
 #x <-revalue(yna, c("Strongly disagree"= "SD", "Somewhat disagree"= "SWD", "Neither disagree nor agree"="N", "Somewhat agree"= "SWA", "Strongly agree"= "SA"))
@@ -458,63 +452,139 @@ summary(LiteracyScoreGr)
 
 # Group_alliedhealth
 
-AlliedHealthStigmaScore <- StigmaScore(Group_alliedhealth)
-AlliedHealthLiteracyScore <- LiteracyScore(Group_alliedhealth)
-summary(AlliedHealthStigmaScore)
-mean(AlliedHealthStigmaScore)
-summary(AlliedHealthLiteracyScore)
-mean(AlliedHealthLiteracyScore)
+StigmaScore_AlliedHealth <- StigmaScore(Group_alliedhealth)
+LiteracyScore_AlliedHealth <- LiteracyScore(Group_alliedhealth)
+summary(StigmaScore_AlliedHealth)
+mean(StigmaScore_AlliedHealth)
+summary(LiteracyScore_AlliedHealth)
+mean(LiteracyScore_AlliedHealth)
 
 # Group_health
 
-HealthStigmaScore <- StigmaScore(Group_health)
-HealthLiteracyScore <- LiteracyScore(Group_health)
-summary(HealthStigmaScore)
-mean(HealthStigmaScore)
-summary(HealthLiteracyScore)
-mean(HealthLiteracyScore)
+StigmaScore_Health <- StigmaScore(Group_health)
+LiteracyScore_Health <- LiteracyScore(Group_health)
+summary(StigmaScore_Health)
+mean(StigmaScore_Health)
+summary(LiteracyScore_Health)
+mean(LiteracyScore_Health)
 
 # Group_support
 
-SupportStigmaScore <- StigmaScore(Group_support)
-SupportLiteracyScore <- LiteracyScore(Group_support)
-summary(SupportStigmaScore)
-mean(SupportStigmaScore)
-summary(SupportLiteracyScore)
-mean(SupportLiteracyScore)
+StigmaScore_Support <- StigmaScore(Group_support)
+LiteracyScore_Support <- LiteracyScore(Group_support)
+summary(StigmaScore_Support)
+mean(StigmaScore_Support)
+summary(LiteracyScore_Support)
+mean(LiteracyScore_Support)
 
 # Group_firstresp   
 
-FirstrespStigmaScore <- StigmaScore(Group_firstresp)
-FirstrespLiteracyScore <- LiteracyScore(Group_firstresp)
-summary(FirstrespStigmaScore)
-mean(FirstrespStigmaScore)
-summary(FirstrespLiteracyScore)
-mean(FirstrespLiteracyScore)
+StigmaScore_Firstresp <- StigmaScore(Group_firstresp)
+LiteracyScore_Firstresp <- LiteracyScore(Group_firstresp)
+summary(StigmaScore_Firstresp)
+mean(StigmaScore_Firstresp)
+summary(LiteracyScore_Firstresp)
+mean(LiteracyScore_Firstresp)
 
 # Group_edu
 
-SupportStigmaScore <- StigmaScore(Group_edu)
-SupportLiteracyScore <- LiteracyScore(Group_edu)
-summary(SupportStigmaScore)
-mean(SupportStigmaScore)
-summary(SupportLiteracyScore)
-mean(SupportLiteracyScore)
+StigmaScore_Edu <- StigmaScore(Group_edu)
+LiteracyScore_Edu <- LiteracyScore(Group_edu)
+summary(StigmaScore_Edu)
+mean(StigmaScore_Edu)
+summary(LiteracyScore_Edu)
+mean(LiteracyScore_Edu)
 
 # Group_fitness 
 
-SupportStigmaScore <- StigmaScore(Group_support)
-SupportLiteracyScore <- LiteracyScore(Group_support)
-summary(SupportStigmaScore)
-mean(SupportStigmaScore)
-summary(SupportLiteracyScore)
-mean(SupportLiteracyScore)
+StigmaScore_Fitness <- StigmaScore(Group_fitness)
+LiteracyScore_Fitness <- LiteracyScore(Group_fitness)
+summary(StigmaScore_Fitness)
+mean(StigmaScore_Fitness)
+summary(LiteracyScore_Fitness)
+mean(LiteracyScore_Fitness)
 
 # Group_other 
 
-SupportStigmaScore <- StigmaScore(Group_support)
-SupportLiteracyScore <- LiteracyScore(Group_support)
-summary(SupportStigmaScore)
-mean(SupportStigmaScore)
-summary(SupportLiteracyScore)
-mean(SupportLiteracyScore)
+StigmaScore_Other <- StigmaScore(Group_other)
+LiteracyScore_Other <- LiteracyScore(Group_other)
+summary(StigmaScore_Other)
+mean(StigmaScore_Other)
+summary(LiteracyScore_Other)
+mean(LiteracyScore_Other)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# Literacy Scores:
+
+# LiteracyScore_AlliedHealth
+# LiteracyScore_Health
+# LiteracyScore_Support
+# LiteracyScore_Firstresp   
+# LiteracyScore_Edu
+# LiteracyScore_Fitness 
+# LiteracyScore_Other 
+
+# Stigma Scores:
+
+# StigmaScore_AlliedHealth
+# StigmaScore_Health
+# StigmaScore_Support
+# StigmaScore_Firstresp   
+# StigmaScore_Edu
+# StigmaScore_Fitness 
+# Stigmacore_Other 
+  
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # ANALYSIS: t-test for subgroups  # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+StigmaScore_All <- StigmaScore(CEDA)
+LiteracyScore_All <- LiteracyScore(CEDA)
+
+
+mu0_LS <- mean(LiteracyScore_All,  na.rm=TRUE)
+mu0_SS <- mean(StigmaScore_All, na.rm=TRUE)
+
+
+# Notes from t tests (1 sample, distributions for stigma and literacy scores look close to normal)
+# t.test(dataset$sample1, mu=mu0)
+
+# Alpha = 0.05
+
+t.test(LiteracyScore_AlliedHealth, mu=mu0_LS)
+t.test(LiteracyScore_Health, mu=mu0_LS)
+t.test(LiteracyScore_Support, mu=mu0_LS)
+t.test(LiteracyScore_Firstresp, mu=mu0_LS)
+t.test(LiteracyScore_Edu, mu=mu0_LS)
+t.test(LiteracyScore_Fitness, mu=mu0_LS)
+
+t.test(StigmaScore_AlliedHealth, mu=mu0_SS)
+t.test(StigmaScore_Health, mu=mu0_SS)
+t.test(StigmaScore_Support, mu=mu0_SS)
+t.test(StigmaScore_Firstresp, mu=mu0_SS)
+t.test(StigmaScore_Edu, mu=mu0_SS)
+t.test(StigmaScore_Fitness, mu=mu0_SS)
+
+# Alpha = 0.01
+
+t.test(LiteracyScore_AlliedHealth, conf.level=0.99, mu=mu0_LS)
+t.test(LiteracyScore_Health,conf.level=0.99, mu=mu0_LS)
+t.test(LiteracyScore_Support, conf.level=0.99, mu=mu0_LS)
+t.test(LiteracyScore_Firstresp, conf.level=0.99, mu=mu0_LS)
+t.test(LiteracyScore_Edu, conf.level=0.99, mu=mu0_LS)
+t.test(LiteracyScore_Fitness, conf.level=0.99, mu=mu0_LS)
+
+t.test(StigmaScore_AlliedHealth, conf.level=0.99, mu=mu0_SS)
+t.test(StigmaScore_Health, conf.level=0.99, mu=mu0_SS)
+t.test(StigmaScore_Support, conf.level=0.99, mu=mu0_SS)
+t.test(StigmaScore_Firstresp, conf.level=0.99, mu=mu0_SS)
+t.test(StigmaScore_Edu, conf.level=0.99, mu=mu0_SS)
+t.test(StigmaScore_Fitness, conf.level=0.99, mu=mu0_SS)
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# Question 4
+
