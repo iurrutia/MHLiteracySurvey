@@ -1,10 +1,13 @@
 install.packages("ggplot2")
 library(ggplot2)
 
+install.packages("dplyr")
+library(dplyr)
 
+library(plyr)
 
 #ANALYSIS!
-CEDA=read.csv("Data/CEDAclean.csv", na.strings=c("","NA"))
+CEDA=read.csv("Data/CEDAClean.csv", na.strings=c("","NA"))
 # str(CEDA)
 
 # Examining columns X & X.1
@@ -165,57 +168,36 @@ Group_fitness <- subset(CEDA,Boolean_occ_fitness==TRUE)
 Group_other <- subset(CEDA,Boolean_occ_other==TRUE)   
 
 
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # RUN A FUNCTION OVER ALL SUBGROUPS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-# Creating grade score columns based on responses to questions about ED literacy & stigma
+# For functions that are passed full subgroups:
 
-# Steps: Complete Literacy Grades columns per literacy question, then 2. add them.
+all_subgroups_na <- list(Group_alliedhealth, Group_health, Group_support, Group_firstresp, Group_edu, Group_fitness, Group_other)
+all_subgroups <- na.omit(all_subgroups_na)
+str(all_subgroups)
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-##########
-# Create graph of responses on most frequent ED on literacy quiz
-# CEDA=read.csv("CEDAclean.csv", na.strings=c("","NA"))
+# For funcitons that are passed a column of each subgroup:
 
+# lapply(all_subgroups,select_,"columnname")
 
+# or
 
-CEDA$LitGrade
-
-str(CEDA$LitGrade)
-
-# This is is so we can make the graph using different subsets of the data in the future 
-# Replace subgroup_name with the name of the subgroup to examine. Else, uncomment LitPlaceholder <- CEDA$LitGrade.
-
-# LitPlaceholder <- subgroup_name$LitGrade
-# LitPlaceholder <- CEDA$LitGrade
-
-
-Literacy_Grade_num <-
-  ifelse(LitPlaceholder ==100,Literacy_Grade_num <-"High",
-         ifelse(LitPlaceholder ==50,Literacy_Grade_num <-"Medium", 
-                ifelse(LitPlaceholder ==0,Literacy_Grade_num <-"Low",NA
-                )))
-
-Literacy_Grade <- na.omit(Literacy_Grade_num)
-
-str(Literacy_Grade)
-table(Literacy_Grade)
-
-x<- Literacy_Grade
-
-#x <-revalue(yna, c("Strongly disagree"= "SD", "Somewhat disagree"= "SWD", "Neither disagree nor agree"="N", "Somewhat agree"= "SWA", "Strongly agree"= "SA"))
-#levels(x)
-ggplot(data.frame(x), aes(x=x, fill=x, na.rm= TRUE)) + geom_bar(na.rm = TRUE) 
-q <- ggplot(data.frame(x), aes(x=x, fill=Literacy_Grade, na.rm= TRUE)) + geom_bar(na.rm = TRUE) 
-q + labs(x = "Score", y = "Count", title = "Scores in question on most common eating disorder", fill = "Score")
-
-
-
-
-
+# all_subgroups_columnname <- list (
+#   Group_alliedhealth$columnname, 
+#   Group_health$columnname, 
+#   Group_support$columnname, 
+#   Group_firstresp$columnname,
+#   Group_edu$columnname,
+#   Group_fitness$columnname,
+#   Group_other$columnname)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -439,8 +421,6 @@ summary(LiteracyScoreGr)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-
-
 # Occupation subgroups are: 
 # Group_alliedhealth
 # Group_health
@@ -449,6 +429,8 @@ summary(LiteracyScoreGr)
 # Group_edu
 # Group_fitness 
 # Group_other 
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 # Group_alliedhealth
 
@@ -537,12 +519,53 @@ mean(LiteracyScore_Other)
   
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # ANALYSIS: t-test for subgroups  # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # ANALYSIS: ANOVA for subgroups  # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 StigmaScore_All <- StigmaScore(CEDA)
 LiteracyScore_All <- LiteracyScore(CEDA)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 mu0_LS <- mean(LiteracyScore_All,  na.rm=TRUE)
@@ -552,39 +575,237 @@ mu0_SS <- mean(StigmaScore_All, na.rm=TRUE)
 # Notes from t tests (1 sample, distributions for stigma and literacy scores look close to normal)
 # t.test(dataset$sample1, mu=mu0)
 
+LiteracyScore_subgroups <- lapply(all_subgroups, LiteracyScore) # Obtains Literacy Score of all subgroups
+StigmaScore_subgroups <-lapply(all_subgroups, StigmaScore) # Obtains Stigma Score of all subgroups
+
 # Alpha = 0.05
 
-t.test(LiteracyScore_AlliedHealth, mu=mu0_LS)
-t.test(LiteracyScore_Health, mu=mu0_LS)
-t.test(LiteracyScore_Support, mu=mu0_LS)
-t.test(LiteracyScore_Firstresp, mu=mu0_LS)
-t.test(LiteracyScore_Edu, mu=mu0_LS)
-t.test(LiteracyScore_Fitness, mu=mu0_LS)
-
-t.test(StigmaScore_AlliedHealth, mu=mu0_SS)
-t.test(StigmaScore_Health, mu=mu0_SS)
-t.test(StigmaScore_Support, mu=mu0_SS)
-t.test(StigmaScore_Firstresp, mu=mu0_SS)
-t.test(StigmaScore_Edu, mu=mu0_SS)
-t.test(StigmaScore_Fitness, mu=mu0_SS)
+ttestoneLiteracyScore_subgroups <- lapply(LiteracyScore_subgroups, t.test, mu=mu0_LS) # t-test of Literacy Score of all subgroups
+ttestoneStigmaScore_subgroups <-lapply(StigmaScore_subgroups, t.test, mu=mu0_SS) # t-test of Stigma Score of all subgroups
 
 # Alpha = 0.01
 
-t.test(LiteracyScore_AlliedHealth, conf.level=0.99, mu=mu0_LS)
-t.test(LiteracyScore_Health,conf.level=0.99, mu=mu0_LS)
-t.test(LiteracyScore_Support, conf.level=0.99, mu=mu0_LS)
-t.test(LiteracyScore_Firstresp, conf.level=0.99, mu=mu0_LS)
-t.test(LiteracyScore_Edu, conf.level=0.99, mu=mu0_LS)
-t.test(LiteracyScore_Fitness, conf.level=0.99, mu=mu0_LS)
+ttest2LiteracyScore_subgroups <- lapply(LiteracyScore_subgroups, t.test, conf.level=0.99, mu=mu0_LS) # t-test of Literacy Score of all subgroups
+ttest2StigmaScore_subgroups <-lapply(StigmaScore_subgroups, t.test, conf.level=0.99, mu=mu0_SS) # t-test of Stigma Score of all subgroups
 
-t.test(StigmaScore_AlliedHealth, conf.level=0.99, mu=mu0_SS)
-t.test(StigmaScore_Health, conf.level=0.99, mu=mu0_SS)
-t.test(StigmaScore_Support, conf.level=0.99, mu=mu0_SS)
-t.test(StigmaScore_Firstresp, conf.level=0.99, mu=mu0_SS)
-t.test(StigmaScore_Edu, conf.level=0.99, mu=mu0_SS)
-t.test(StigmaScore_Fitness, conf.level=0.99, mu=mu0_SS)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 # Question 4
+# Question 4 responses are recorded in: 
+# CEDA$Identify_Recognize
+# CEDA$Identify_Support
+# CEDA$Identify_Resources
 
+factrecognize <- factor(CEDA$Identify_Recognize, levels = c("Strongly disagree", "Disagree", "Neither disagree nor agree", "Somewhat agree", "Strongly agree"))
+factrecognize
+y <- revalue(factrecognize, c("Disagree"= "Somewhat disagree"))
+summary(y)
+yna <- na.omit(y)
+yna
+summary(yna)
+x <- revalue(yna, c("Strongly disagree"= "SD", "Somewhat disagree"= "SWD", "Neither disagree nor agree"="N", "Somewhat agree"= "SWA", "Strongly agree"= "SA"))
+levels(x)
+ggplot(data.frame(x), aes(x=x, fill=x, na.rm= TRUE)) + geom_bar(na.rm = TRUE) 
+q <- ggplot(data.frame(x), aes(x=x, fill=yna, na.rm= TRUE)) + geom_bar(na.rm = TRUE) 
+q + labs(x = "Response", y = "Count", title = "I believe I can recognize the signs of an eating disorder in others", fill = "Response")
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # CATEGORICAL TO NUMERICAL # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# Input needs to be a column with responses: 
+# strongly disagree, somewhat disagree, neither disagree or agree, somewhat agree, strongly agree 
+
+# This question should be measured against every occupation group. Task: Function by subgroup.
+# Synthesizing data into categories: SA, A, N, D, SD are changed to 0, 2.5, 5, 7.5, 10
+
+ConvertCategoriesNum <- function(CEDA_subgroup_col){
+  
+  Category_to_number_na <- 
+    ifelse(CEDA_subgroup_col == "Strongly agree", 10,
+           ifelse(CEDA_subgroup_col == "Somewhat agree", 7.5,
+                  ifelse(CEDA_subgroup_col == "Neither disagree or agree", 5,
+                         ifelse(CEDA_subgroup_col == "Somewhat disagree", 2.5,
+                                ifelse(CEDA_subgroup_col == "Disagree", 2.5,
+                                       ifelse(CEDA_subgroup_col == "Strongly disagree", 0, NA
+                                       ))))))
+  
+  Category_to_number <- na.omit(Category_to_number_na)
+  return(Category_to_number)
+}
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # Q4 Preparedness: Recognize, support, resources # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# Setup information:
+
+
+
+# Occupation subgroups are: 
+# Group_alliedhealth
+# Group_health
+# Group_support
+# Group_firstresp   
+# Group_edu
+# Group_fitness 
+# Group_other 
+
+# Variables of interest:
+
+# "I believe I can recognize the signs of an eating disorder in others"
+# Identify_Recognize
+
+Q4_Recognize <- lapply(all_subgroups,select_,"Identify_Recognize") # Selects column correstponding to Identify_Recognize from each subgroup
+Q4_Recognize_num <- lapply(Q4_Recognize,ConvertCategoriesNum) # Converts Identify_Recognize responses to numerical data for each subgroup
+
+mu_Identify_Recognize <- mean(ConvertCategoriesNum(CEDA$Identify_Recognize)) # Global mean for t.test
+
+ttest_Identify_Recognize <- lapply(Q4_Recognize_num, t.test, mu=mu_Identify_Recognize) # t-test of Literacy Score of all subgroups, alpha=0.05
+ttest2_Identify_Recognize <- lapply(Q4_Recognize_num, t.test, conf.level=0.99, mu=mu_Identify_Recognize) # t-test of Literacy Score of all subgroups, alpha=0.01
+
+
+# "I feel prepared to support someone who is experiencing an eating disorder"
+# Identify_Support
+
+Q4_Support <- lapply(all_subgroups,select_,"Identify_Support") # Selects column correstponding to Identify_Support from each subgroup
+Q4_Support_num <- lapply(Q4_Support,ConvertCategoriesNum) # Converts Identify_Support responses to numerical data for each subgroup
+
+mu_Identify_Support <- mean(ConvertCategoriesNum(CEDA$Identify_Support)) # Global mean for t.test
+
+ttest_Identify_Support <- lapply(Q4_Support_num, t.test, mu=mu_Identify_Support) # t-test of Literacy Score of all subgroups, alpha=0.05
+ttest2_Identify_Support <- lapply(Q4_Support_num, t.test, conf.level=0.99, mu=mu_Identify_Support) # t-test of Literacy Score of all subgroups, alpha=0.01
+
+# "I know about the resources available to support people experiencing eating disorders"
+# Identify_Resources
+
+Q4_Resources <- lapply(all_subgroups,select_,"Identify_Resources") # Selects column correstponding to Identify_Resources from each subgroup
+Q4_Resources_num <- lapply(Q4_Resources,ConvertCategoriesNum) # Converts Identify_Resources responses to numerical data for each subgroup
+
+mu_Identify_Resources <- mean(ConvertCategoriesNum(CEDA$Identify_Resources)) # Global mean for t.test
+
+ttest_Identify_Resources <- lapply(Q4_Resources_num, t.test, mu=mu_Identify_Resources) # t-test of Literacy Score of all subgroups, alpha=0.05
+ttest2_Identify_Resources <- lapply(Q4_Resources_num, t.test, conf.level=0.99, mu=mu_Identify_Resources) # t-test of Literacy Score of all subgroups, alpha=0.01
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # Q5 Who would you approach (clean version) # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # Q5 Who would you approach (clean version) # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+
+# Where have you received information about eating disorders in the past?
+# Info_PastEdu
+
+
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # Q8 Education received: Adequate, Active, Open  # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# Occupation subgroups are: 
+# Group_alliedhealth
+# Group_health
+# Group_support
+# Group_firstresp   
+# Group_edu
+# Group_fitness 
+# Group_other 
+
+# Variables of interest:
+
+# I have received an adequate amount of public education about eating disorders
+# PublicEdu_Adequate
+
+Q8_Adequate <- lapply(all_subgroups,select_,"PublicEdu_Adequate") # Selects column correstponding to PublicEdu_Adequate from each subgroup
+Q8_Adequate_num <- lapply(Q8_Adequate,ConvertCategoriesNum) # Converts PublicEdu_Adequate responses to numerical data for each subgroup
+
+mu_PublicEdu_Adequate <- mean(ConvertCategoriesNum(CEDA$PublicEdu_Adequate)) # Global mean for t.test
+
+ttest_PublicEdu_Adequate <- lapply(Q8_Adequate_num, t.test, mu=mu_PublicEdu_Adequate) # t-test of Literacy Score of all subgroups, alpha=0.05
+ttest2_PublicEdu_Adequate <- lapply(Q8_Adequate_num, t.test, conf.level=0.99, mu=mu_PublicEdu_Adequate) # t-test of Literacy Score of all subgroups, alpha=0.01
+
+# I am actively seeking more public education about eating disorders"
+# PublicEdu_Active
+
+Q8_Active <- lapply(all_subgroups,select_,"PublicEdu_Active") # Selects column correstponding to PublicEdu_Active from each subgroup
+Q8_Active_num <- lapply(Q8_Active,ConvertCategoriesNum) # Converts PublicEdu_Active responses to numerical data for each subgroup
+
+mu_PublicEdu_Active <- mean(ConvertCategoriesNum(CEDA$PublicEdu_Active)) # Global mean for t.test
+
+ttest_PublicEdu_Active <- lapply(Q8_Active_num, t.test, mu=mu_PublicEdu_Active) # t-test of Literacy Score of all subgroups, alpha=0.05
+ttest2_PublicEdu_Active <- lapply(Q8_Active_num, t.test, conf.level=0.99, mu=mu_PublicEdu_Active) # t-test of Literacy Score of all subgroups, alpha=0.01
+
+# I am open to learning more about eating disorders
+# PublicEdu_Open
+
+Q8_Open <- lapply(all_subgroups,select_,"PublicEdu_Open") # Selects column correstponding to PublicEdu_Open from each subgroup
+Q8_Open_num <- lapply(Q8_Open,ConvertCategoriesNum) # Converts PublicEdu_Open responses to numerical data for each subgroup
+
+mu_PublicEdu_Open <- mean(ConvertCategoriesNum(CEDA$PublicEdu_Open)) # Global mean for t.test
+
+ttest_PublicEdu_Open <- lapply(Q8_Open_num, t.test, mu=mu_PublicEdu_Open) # t-test of Literacy Score of all subgroups, alpha=0.05
+ttest2_PublicEdu_Open <- lapply(Q8_Open_num, t.test, conf.level=0.99, mu=mu_PublicEdu_Open) # t-test of Literacy Score of all subgroups, alpha=0.01
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # Q3 (Most frequent ED) converted to Categorical # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# Create graph of responses on most frequent ED on literacy quiz
+# CEDA=read.csv("CEDAclean.csv", na.strings=c("","NA"))
+
+# This is is so we can make the graph using different subsets of the data in the future 
+# Replace subgroup_name with the name of the subgroup to examine. Else, uncomment LitPlaceholder <- CEDA$LitGrade.
+
+# LitPlaceholder <- subgroup_name$LitGrade
+# LitPlaceholder <- CEDA$LitGrade # Comment this line, and uncomment line above to run on subset
+
+
+LiteracyGradeCategorical <- function(CEDA_subgroup){
+  Literacy_Grade_num <- 
+    
+    ifelse(CEDA_subgroup$LitGrade == 100,"High",
+           ifelse(CEDA_subgroup$LitGrade == 50,"Medium", 
+                  ifelse(CEDA_subgroup$LitGrade ==0,"Low",NA
+                  )))
+  
+  Literacy_Grade <- na.omit(Literacy_Grade_num)
+  return(Literacy_Grade)
+}
+
+LiteracyGradeCategorical(CEDA) #Test
+
+LitGradeCatGraph <- function(CEDA_subgroup){
+  
+  x<- LiteracyGradeCategorical(CEDA_subgroup)
+  #  x <-revalue(yna, c("Strongly disagree"= "SD", "Somewhat disagree"= "SWD", "Neither disagree nor agree"="N", "Somewhat agree"= "SWA", "Strongly agree"= "SA"))
+  #levels(x)
+  ggplot(data.frame(x), aes(x=x, fill=x, na.rm= TRUE)) + geom_bar(na.rm = TRUE) 
+  q <- ggplot(data.frame(x), aes(x=x, fill=Literacy_Grade, na.rm= TRUE)) + geom_bar(na.rm = TRUE) 
+  q + labs(x = "Score", y = "Count", title = "Scores in question on most common eating disorder", fill = "Score")
+}
+
+LitGradeCatGraph(CEDA) #Test
+
+
+IN PROGRESS
