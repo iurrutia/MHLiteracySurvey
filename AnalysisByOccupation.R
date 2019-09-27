@@ -517,6 +517,7 @@ mean(LiteracyScore_Other)
 # StigmaScore_Fitness 
 # Stigmacore_Other 
   
+<<<<<<< HEAD
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # ANALYSIS: ANOVA for subgroups  # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -809,3 +810,6 @@ LitGradeCatGraph(CEDA) #Test
 
 
 IN PROGRESS
+=======
+#IN PROGRESS
+>>>>>>> c96b696a3ed289a057d44d4f4128835fa639b6c4
