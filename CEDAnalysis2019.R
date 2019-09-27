@@ -832,30 +832,6 @@ tapply(CEDA_analysis_b$Q8_Open,CEDA_analysis_b$Occupation,mean, na.rm=TRUE)
 
 # We compare RSR scores accross exposure to types of ED educational resources offered by NEDIC
 
-boxplot(CEDA_analysis_b$RSR_Score~CEDA_analysis_b$NEDIC_services) # Open graphs in a separate window for legibility
-
-# Recall that NEDIC_services has value 1 if respondent has had access to the types of services offered by NEDIC, and 0 otherwise
-
-# Since we only have two means to compare (NEDIC_services = 0 or 1), it is appropriate to use a t-test:
-
-# t-test:
-# Ho: The mean RSR score is the same between respondents receiving NEDIC-type educational services and those who haven't
-# Ho: The mean RSR score is not the between respondents receiving NEDIC-type educational services and those who haven't
-
-mu_PublicEdu_Adequate <- mean(ConvertCategoriesNum(CEDA$PublicEdu_Adequate)) # Global mean for t.test
-
-ttest_PublicEdu_Adequate <- lapply(Q8_Adequate_num, t.test, mu=mu_PublicEdu_Adequate) # t-test of Literacy Score of all subgroups, alpha=0.05
-
-
-# boxplots:
-library(ggplot2)
-library(readr)
-p <- ggplot(CEDA_analysis_b,aes(x=reorder(Occupation, RSR_Score, mean), y=RSR_Score, fill=Occupation)) +
-  geom_violin() +
-  geom_jitter(width=0.25, alpha=0.2)
-p   + labs(x = "Occupation Category") + labs(y = "RSR_Score")
-
-
 
 # Additional observations:
 # We note that the effect the variation in RSR scores by NEDIC_services varies accross occupations:
@@ -876,72 +852,67 @@ ggplot(data = NS_Occ_means) +
   geom_point(mapping = aes(x=row.names(NS_Occ_means),y=NSm_1, size = Count_1.Freq, color = "blue" )) 
 
 
+####################################################
+
+boxplot(CEDA_analysis_b$RSR_Score~CEDA_analysis_b$NEDIC_services) # Open graphs in a separate window for legibility
 
 
+# Recall that NEDIC_services has value 1 if respondent has had access to the types of services offered by NEDIC, and 0 otherwise
+
+# Since we only have two means to compare (NEDIC_services = 0 or 1), it is appropriate to use a t-test:
+
+# t-test:
+# Ho: The mean RSR score is the same between respondents receiving NEDIC-type educational services and those who haven't
+# Ho: The mean RSR score is not the between respondents receiving NEDIC-type educational services and those who haven't
 
 
+# Check assumptions:
+
+res.ftest <- var.test(RSR_Score ~ NEDIC_services, data = CEDA_analysis_b)
+res.ftest
+
+shapiro.test(RSR_score[NEDIC_services == "0"])
+shapiro.test(RSR_score[NEDIC_services == "1"]) 
+
+shapiro.test(NS_0$RSR_Score)
+shapiro.test(NS_1$RSR_Score)
+
+plot(density(na.omit(NS_0$RSR_Score)))
+plot(density(NS_1$RSR_Score))
+
+qqnorm( CEDA_analysis_b$RSR_Score[CEDA_analysis_b$NEDIC_services==0], main='No NEDIC Services')
+qqline( CEDA_analysis_b$RSR_Score[CEDA_analysis_b$NEDIC_services==0] )
+
+qqnorm( CEDA_analysis_b$RSR_Score[CEDA_analysis_b$NEDIC_services==1], main='NEDIC Services')
+qqline( CEDA_analysis_b$RSR_Score[CEDA_analysis_b$NEDIC_services==1] )
+
+ggplot(data = CEDA_analysis_b, aes(x=RSR_score)) + 
+  geom_histogram()+facet_grid(~NEDIC_services)+theme_bw()
+
+with(CEDA_analysis_b, shapiro.test(RSR_score[NEDIC_services == "0"]))
+with(CEDA_analysis_b, shapiro.test(RSR_score[NEDIC_services == "1"])) 
+
+# T TEST:
 
 
+res <- t.test(RSR_score ~ NEDIC_services, data = CEDA_analysis_b, var.equal = TRUE)
+res
 
 
+# We conclude that, though similar, respondents who have received the types of Educational services offered by NEDIC tended
+# to score higher on RSR_Score than those who hadn't, to a statistically significant level. In other words, these types of 
+# services produce a measurable effec on 'comfort and preparadeness' to
+# recognize and support others experiencing eating disorders (compared between occupations)
+
+####################################################
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-#SCRATCH WORK:
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########################################################################
-########### SCRATCH NOTES BELOW: #######################################
-
-# Note, we use the grepl function to find which respondents indicated they had received education on EDs in a form that is provided 
-# by NEDIC. We then compare respondents' comfort providing resources, support and recognizing signs of EDs based on whether or not they've 
-# received these typeos of education/information regarding EDs.
-
-
-
-
-# Variables of interest:
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # Q5 Who would you approach (clean version) # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # Q5 Who would you approach (clean version) # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-
-
-# Where have you received information about eating disorders in the past?
-# Info_PastEdu
-
-
-
+# boxplots:
+library(ggplot2)
+library(readr)
+p <- ggplot(CEDA_analysis_b,aes(x=reorder(Occupation, RSR_Score, mean), y=RSR_Score, fill=Occupation)) +
+  geom_violin() +
+  geom_jitter(width=0.25, alpha=0.2)
+p   + labs(x = "Occupation Category") + labs(y = "RSR_Score")
 
 
