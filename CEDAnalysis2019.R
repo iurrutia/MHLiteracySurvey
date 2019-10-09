@@ -493,8 +493,11 @@ str(CEDA_analysis_LS)
 help(aov)
 # Broadly speaking, we are interested in comparing the literacy and stigma variables accross occupations, so before
 # we conduct the ANOVA, let's look at the boxplots:
-boxplot(CEDA_analysis_LS$Literacy~CEDA_analysis_LS$Occupation) # Open graphs in a separate window for legibility
-boxplot(CEDA_analysis_LS$Stigma~CEDA_analysis_LS$Occupation) 
+
+par(mfrow=c(2,1))
+boxplot(CEDA_analysis_LS$Literacy~CEDA_analysis_LS$Occupation, ylab="Literacy Score") # Open graphs in a separate window for legibility
+boxplot(CEDA_analysis_LS$Stigma~CEDA_analysis_LS$Occupation, ylab="Stigma Score") 
+dev.off()
 
 # Observing the boxplots above we note that the Literacy scores are all similar, but the stigma scores
 # seem to vary a bit more by occupation, however it is not clear from visual inspection if there is any
@@ -552,6 +555,7 @@ plot(TukeyHSD(anova_stig))
 
 # We go ahead and confirm, and note the large p value, as expected:
 
+#manova(dependent.vars ~ indep.vars)
 
 litstig.man <- manova(cbind(Stigma, Literacy) ~ Occupation, data = CEDA_analysis_LS)
 summary(litstig.man)
@@ -792,6 +796,12 @@ q8.man <- manova(cbind(Q8_Adequate, Q8_Active, Q8_Open) ~ Occupation, data = CED
 summary(q8.man)
 summary.aov(q8.man)
 
+summary(q8.man, test=c("Pillai", "Wilks", "Hotelling-Lawley", "Roy"))
+summary(q8.man, test = "Wilks")
+summary(q8.man, test = "Hotelling-Lawley")
+summary(q8.man, test = "Roy")
+
+
 # Note that sig. dif. was found for Q8_Active & Q8_Open, but for Q8_Adequate no significant distinction btw groups was found.
 # We run all dep vars separately to examine the differences.
 
@@ -915,4 +925,35 @@ p <- ggplot(CEDA_analysis_b,aes(x=reorder(Occupation, RSR_Score, mean), y=RSR_Sc
   geom_jitter(width=0.25, alpha=0.2)
 p   + labs(x = "Occupation Category") + labs(y = "RSR_Score")
 
+
+#####################################################
+# Helpful function to examin variables
+
+mymax <- function(x) {
+  ifelse( !all(is.na(x)), max(x, na.rm=T), NA)}
+
+
+######################################################
+
+# Extras:
+
+
+#manova(dependent.vars ~ indep.var)
+
+RSR_ON.an <- aov(RSR_score ~ Occupation + NEDIC_services + Occupation:NEDIC_services, data = CEDA_analysis_b)
+summary(RSR_ON.an)
+plot(RSR_ON.an)
+
+TukeyHSD(RSR_ON.an)
+
+# Two-way Interaction Plot
+
+with(CEDA_analysis_b,{
+interaction.plot(NEDIC_services, Occupation, RSR_score, type="b", col=c(1:3),
+                 leg.bty="o", leg.bg="beige", lwd=2, pch=c(18,24,22),
+                 xlab="Occupation",
+                 ylab="NEDIC_services",
+                 main="Interaction Plot")
+  
+})
 
