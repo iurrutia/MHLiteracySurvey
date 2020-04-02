@@ -79,7 +79,7 @@ We use an ANOVA to test the hypothesis that the mean RSR score is the same accro
 
 This is helpful, but we also want to know which occupational categories should be recommended. We perform Tukey's HSD to examine differences between pairs of categories to see which categories have higher/lower RSR scores. Tukey's HSD allows us to perform multiple comparisons, adjusting for 95% family-wise confidence level.
 
-Confidence intervals for significance between pairs of occupational categories (Tukey's HSD):
+Confidence intervals for differences between pairs of occupational categories (Tukey's HSD):
 
 <img src="https://github.com/iurrutia/MHLiteracySurvey/blob/master/images/testb.jpeg" width="350">
 
