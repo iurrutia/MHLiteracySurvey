@@ -81,7 +81,7 @@ This is helpful, but we also want to know which occupational categories should b
 
 Confidence intervals for significance between pairs of occupational categories (Tukey's HSD):
 
-<img src="https://github.com/iurrutia/MHLiteracySurvey/blob/master/images/testb.jpeg" width="100">
+<img src="https://github.com/iurrutia/MHLiteracySurvey/blob/master/images/testb.jpeg" width="350">
 
 We use CLD to create buckets of categories to separate out occupations with high/low RSR scores:
 
