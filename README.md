@@ -6,7 +6,7 @@
 
 [2. Overview](#overview)
 
-[3. Model](#model)
+[3. Analysis](#analysis)
 
 [4. Conclusions and next steps](#concl)
 
@@ -44,8 +44,9 @@ Similar analysis for were conducted to assess *ED Literacy Scores*(measured thro
 
 The dataset consists survey data (n=1000) collected over 1 month in the summer of 2018. Respondents who were domain experts in eating disorders were excluded. Data was collected in Canada, from all provinces, and the dataset was well balanced (age/geographic location). Occupational category sizes were not balanced, but variances accross occupational categories were similar (normality, homogeneity tests suggested ANOVA was appropriate.)
 
+## <a name="analysis">Analysis</a>
 
-#### How
+#### Setup
 
 I compare (self-assessed) **eating disorder knowledge** accross different **occupational categories**.
 
@@ -56,20 +57,33 @@ The dependent variable, **RSR_Score**, eating disorder knowledge was created usi
 
 The overall RSR scores can be observed in the following figure:
 
-
 RSR scores:
-<img src="https://github.com/iurrutia/MiniMLProjects/blob/master/images/rsrhist.jpg" width="400">
+<img src="https://github.com/iurrutia/MHLiteracySurvey/blob/master/images/rsrhist.png" width="400">
 
 
 The following table shows RSR scores by occupation:
-<img src="https://github.com/iurrutia/MiniMLProjects/blob/master/images/rsrbyocc.png" width="400">
+<img src="https://github.com/iurrutia/MHLiteracySurvey/blob/master/images/rsrbyocc.png" width="400">
 
 
-rsrocchist
+And the following figure shows the RSR scores per occupational category:
+<img src="https://github.com/iurrutia/MHLiteracySurvey/blob/master/images/rsrocchist.png" width="400">
 
 
+
+#### Test
+
+We use an ANOVA to test the hypothesis that the mean RSR score is the same accross occupational categories, and we reject this hypothesis with a p-value of 5.27e-09.
+
+This is helpful, but we also want to know which occupational categories should be recommended. We perform Tukey's HSD to examine differences between pairs of categories to see which categories have higher/lower RSR scores. Tukey's HSD allows us to perform multiple comparisons, adjusting for 95% family-wise confidence level.
 
 Confidence intervals for significance between pairs of occupational categories (Tukey's HSD)
-<img src="https://github.com/iurrutia/MiniMLProjects/blob/master/images/testb.jpg" width="400">
+<img src="https://github.com/iurrutia/MHLiteracySurvey/blob/master/images/testb.jpg" width="100">
+
+We use CLD to create buckets of categories to separate out occupations with high/low RSR scores:
+
+<img src="https://github.com/iurrutia/MHLiteracySurvey/blob/master/images/CLD.png" width="100">
+
+
+## <a name="concl">Conclusions and next steps</a>
 
 
