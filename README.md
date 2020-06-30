@@ -25,7 +25,7 @@ Pre-processing and cleaning scripts are not included in this repo.
 
 - Final script used to create report for NEDIC: [R script](https://github.com/iurrutia/MHLiteracySurvey/blob/master/CEDAnalysis2019.R)  
 
-- A part of the script was pasted into a notebook to present a portion of this analysis to show an example of the analyses perfomed using the R script: [Notebook for Insight](https://github.com/iurrutia/MHLiteracySurvey/blob/master/CEDAnalysis2019.R) 
+- A part of the script was pasted into a notebook to present a portion of this analysis to show an example of the analyses perfomed using the R script: [Notebook for Insight](https://github.com/iurrutia/MHLiteracySurvey/blob/master/InsightDemo.ipynb) 
 
 - Other inclusions are older/preliminary versions of the analysis
 
